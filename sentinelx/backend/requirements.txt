@@ -1,0 +1,7 @@
+fastapi>=0.68.0
+uvicorn>=0.15.0
+python-magic>=0.4.24
+pdfkit>=1.0.0
+requests>=2.26.0
+python-nmap>=0.7.1
+pyopenssl>=20.0.1
