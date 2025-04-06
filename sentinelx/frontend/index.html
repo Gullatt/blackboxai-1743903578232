@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelX - Proteção Digital</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .risk-high { color: #ef4444; }
+        .risk-medium { color: #f59e0b; }
+        .risk-low { color: #10b981; }
+        .risk-critical { color: #7c3aed; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-blue-600 p-6 text-white shadow-md">
+        <div class="container mx-auto flex items-center">
+            <img src="https://via.placeholder.com/100x50?text=SentinelX" alt="Logo SentinelX" class="h-12 mr-4">
+            <div>
+                <h1 class="text-2xl font-bold">SentinelX</h1>
+                <p class="text-blue-100">Proteção digital ao alcance de todos</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 max-w-4xl">
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Análise de Segurança</h2>
+            
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <input type="text" id="targetInput" placeholder="Digite uma URL (ex: https://exemplo.com) ou IP" 
+                    class="flex-grow p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
+                
+                <button id="analyzeBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    <i class="fas fa-shield-alt mr-2"></i> Analisar Segurança
+                </button>
+            </div>
+            
+            <div id="loading" class="hidden text-center py-4">
+                <i class="fas fa-spinner fa-spin text-blue-500 text-2xl"></i>
+                <p class="mt-2 text-gray-600">Analisando segurança, por favor aguarde...</p>
+            </div>
+        </section>
+
+        <section id="resultsSection" class="hidden bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Resultados da Análise</h2>
+                <span id="riskLevel" class="text-lg font-bold"></span>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="font-medium text-gray-700 mb-2">Resumo:</h3>
+                <p id="summaryText" class="text-gray-600"></p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Pontos de Atenção:</h3>
+                    <ul id="issuesList" class="list-disc pl-5 text-gray-600"></ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Recomendações:</h3>
+                    <ul id="recommendationsList" class="list-disc pl-5 text-gray-600"></ul>
+                </div>
+            </div>
+            
+            <button id="downloadPdfBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                <i class="fas fa-file-pdf mr-2"></i> Baixar Relatório PDF
+            </button>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Perguntas Frequentes</h2>
+            
+            <div class="space-y-3">
+                <details class="border-b border-gray-200 pb-3">
+                    <summary class="font-medium text-gray-700 cursor-pointer">O que é uma porta aberta?</summary>
+                    <p class="mt-2 text-gray-600">Portas abertas são como janelas em uma casa digital que permitem a comunicação com outros sistemas. Algumas são necessárias, mas outras podem ser exploradas por invasores se não estiverem protegidas.</p>
+                </details>
+                
+                <details class="border-b border-gray-200 pb-3">
+                    <summary class="font-medium text-gray-700 cursor-pointer">Por que o certificado SSL é importante?</summary>
+                    <p class="mt-2 text-gray-600">O SSL protege os dados trocados entre você e o site, como senhas e informações pessoais. Sem ele, os dados podem ser interceptados por terceiros.</p>
+                </details>
+                
+                <details class="border-b border-gray-200 pb-3">
+                    <summary class="font-medium text-gray-700 cursor-pointer">Esta ferramenta substitui um profissional?</summary>
+                    <p class="mt-2 text-gray-600">Não. O SentinelX é uma ferramenta educativa que ajuda a identificar riscos básicos. Para proteção completa, recomendamos consultar um especialista em segurança digital.</p>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-6 mt-8">
+        <div class="container mx-auto text-center">
+            <p>SentinelX - Proteção digital ao alcance de todos</p>
+            <p class="text-gray-400 text-sm mt-2">Ferramenta educativa. Para ações técnicas, consulte um profissional.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('analyzeBtn').addEventListener('click', async function() {
+            const target = document.getElementById('targetInput').value.trim();
+            if (!target) {
+                alert('Por favor, digite uma URL ou IP para análise');
+                return;
+            }
+
+            // Mostra loading
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ target: target })
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Erro na análise:', error);
+                alert('Ocorreu um erro durante a análise. Verifique o console para detalhes.');
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        });
+
+        function displayResults(data) {
+            // Atualiza nível de risco
+            const riskLevel = document.getElementById('riskLevel');
+            riskLevel.textContent = data.risk_level;
+            riskLevel.className = 'text-lg font-bold ' + getRiskClass(data.risk_level);
+
+            // Resumo
+            document.getElementById('summaryText').textContent = 
+                `Análise de ${data.target} realizada em ${new Date(data.scan_date).toLocaleString()}.`;
+
+            // Pontos de atenção
+            const issuesList = document.getElementById('issuesList');
+            issuesList.innerHTML = '';
+            data.explanations.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                issuesList.appendChild(li);
+            });
+
+            // Recomendações
+            const recList = document.getElementById('recommendationsList');
+            recList.innerHTML = '';
+            data.recommendations.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                recList.appendChild(li);
+            });
+
+            // Configura botão de download
+            document.getElementById('downloadPdfBtn').onclick = () => {
+                window.open(`http://localhost:8000/report?target=${encodeURIComponent(data.target)}`, '_blank');
+            };
+
+            // Mostra resultados
+            document.getElementById('resultsSection').classList.remove('hidden');
+        }
+
+        function getRiskClass(riskLevel) {
+            if (riskLevel.includes('Alto')) return 'risk-high';
+            if (riskLevel.includes('Médio')) return 'risk-medium';
+            if (riskLevel.includes('Baixo')) return 'risk-low';
+            if (riskLevel.includes('Crítico')) return 'risk-critical';
+            return '';
+        }
+    </script>
+</body>
+</html>
