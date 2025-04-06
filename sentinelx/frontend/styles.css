@@ -1,0 +1,123 @@
+/* Estilos adicionais para complementar o Tailwind */
+.chatbot-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #3B82F6;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1);
+    background: #2563EB;
+}
+
+.chatbot-toggle i {
+    font-size: 24px;
+}
+
+.chatbot-modal {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    z-index: 1000;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.risk-high {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+}
+
+.risk-medium {
+    background-color: #FEF3C7;
+    color: #B45309;
+}
+
+.risk-low {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.risk-critical {
+    background-color: #EDE9FE;
+    color: #5B21B6;
+}
+
+/* Melhorias para mobile */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    #resultsSection {
+        padding: 1rem;
+    }
+    
+    .chatbot-modal {
+        width: 280px;
+        right: 10px;
+    }
+}
+
+/* Efeitos de hover para botões */
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para inputs */
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Animações de loading */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Transições suaves para seções */
+section {
+    transition: all 0.3s ease;
+}
